@@ -70,7 +70,7 @@ with block:
         with gr.Column():
             input_image = gr.Image(sources='upload', type="numpy")
             prompt = gr.Textbox(label="Prompt")
-            run_button = gr.Button(label="Run")
+            run_button = gr.Button()
             with gr.Accordion("Advanced options", open=False):
                 num_samples = gr.Slider(label="Images", minimum=1, maximum=12, value=1, step=1)
                 image_resolution = gr.Slider(label="Image Resolution", minimum=256, maximum=768, value=512, step=64)
