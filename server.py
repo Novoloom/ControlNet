@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import diffusionProcessorDispatch
+from constrainedDiffusor import diffusionProcessorDispatch
 
 app = Flask(__name__)
 @app.route('/process', methods=['POST'])

@@ -1,6 +1,4 @@
-import canny
-import scribble
-import depth
+from ..gradio.diffusors import canny, scribble, depth
 
 diffusers = {
     "canny": canny,
