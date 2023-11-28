@@ -2,9 +2,10 @@ from flask import Flask, request, jsonify
 # from constrainedDiffusor import diffusionProcessorDispatch
 
 app = Flask(__name__)
-@app.route('/', methods=['GET'])
+
+@app.route('/hi', methods=['GET'])
 def index():
-    return jsonify(['Hello World!'])
+    return "Hello World!"
 
 # @app.route('/process', methods=['POST'])
 # def process_image():
@@ -23,4 +24,5 @@ def index():
 
 
 if __name__ == '__main__':
+    print("Starting server...")
     app.run(debug=True, host='0.0.0.0', port=5000)
