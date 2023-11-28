@@ -1,11 +1,11 @@
-import depth
-import canny
+# import depth
+# import canny
 import scribble
 
 diffusers = {
-    "canny": canny,
+    # "canny": canny,
     "scribble": scribble,
-    "depth": depth,
+    # "depth": depth,
 }
 def main(controlnet_type, diffuser_params):
    diffuser = diffusers[controlnet_type]
