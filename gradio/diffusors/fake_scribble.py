@@ -10,15 +10,15 @@ import random
 
 from pytorch_lightning import seed_everything
 from annotator.util import resize_image, HWC3
-from annotator.hed import HEDdetector
+from annotator.hed import HEDdetector, nms
 from cldm.model import create_model, load_state_dict
 from cldm.ddim_hacked import DDIMSampler
 
 
 apply_hed = HEDdetector()
 
-model = create_model('./models/cldm_v15.yaml').cpu()
-model.load_state_dict(load_state_dict('./models/control_sd15_hed.pth', location='cuda'))
+model = create_model('../../models/cldm_v15.yaml').cpu()
+model.load_state_dict(load_state_dict('./models/control_sd15_scribble.pth', location='cuda'))
 model = model.cuda()
 ddim_sampler = DDIMSampler(model)
 
@@ -32,6 +32,10 @@ def process(input_image, prompt, a_prompt, n_prompt, num_samples, image_resoluti
         H, W, C = img.shape
 
         detected_map = cv2.resize(detected_map, (W, H), interpolation=cv2.INTER_LINEAR)
+        detected_map = nms(detected_map, 127, 3.0)
+        detected_map = cv2.GaussianBlur(detected_map, (0, 0), 3.0)
+        detected_map[detected_map > 4] = 255
+        detected_map[detected_map < 255] = 0
 
         control = torch.from_numpy(detected_map.copy()).float().cuda() / 255.0
         control = torch.stack([control for _ in range(num_samples)], dim=0)
@@ -64,13 +68,13 @@ def process(input_image, prompt, a_prompt, n_prompt, num_samples, image_resoluti
         x_samples = (einops.rearrange(x_samples, 'b c h w -> b h w c') * 127.5 + 127.5).cpu().numpy().clip(0, 255).astype(np.uint8)
 
         results = [x_samples[i] for i in range(num_samples)]
-    return [detected_map] + results
+    return [255 - detected_map] + results
 
 
 block = gr.Blocks().queue()
 with block:
     with gr.Row():
-        gr.Markdown("## Control Stable Diffusion with HED Maps")
+        gr.Markdown("## Control Stable Diffusion with Fake Scribble Maps")
     with gr.Row():
         with gr.Column():
             input_image = gr.Image(source='upload', type="numpy")
