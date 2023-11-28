@@ -1,4 +1,6 @@
-from diffusors import scribble, canny, depth
+import depth
+import canny
+import scribble
 
 diffusers = {
     "canny": canny,
