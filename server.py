@@ -7,9 +7,8 @@ import io
 import base64
 from constrainedDiffusor import diffusionProcessorDispatch
 
-
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://dev.novoloom.com"}})
 
 @app.route('/hi', methods=['GET'])
 def index():
@@ -50,4 +49,5 @@ def process_image():
 if __name__ == '__main__':
     print("Starting server...")
     app.run(debug=True, host='0.0.0.0', port=5000)
+
 
